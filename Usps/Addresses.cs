@@ -33,7 +33,14 @@ public class Addresses(IHttpClientFactory httpClientFactory, IConfiguration conf
         return check;
     }
 
-    static string Parameter(string key, string? value) => String.IsNullOrWhiteSpace(value)
-        ? String.Empty
-        : $"&{key}={value}";
+    public async Task<CityStateResult?> GetCityAndStateAsync(string zipcode, CancellationToken cancellationToken = default)
+    {
+        var requesturl = $"{BaseUrl}/city-state?ZIPCode={zipcode}";
+
+        await AuthorizeAsync(cancellationToken);
+
+        var check = await HttpClient.GetFromJsonAsync<CityStateResult>(requesturl.ToString(), cancellationToken);
+
+        return check;
+    }
 }

@@ -14,11 +14,13 @@ public abstract class Factory(IHttpClientFactory httpClientFactory, IConfigurati
 
     static protected Result? Authorization { get; private set; }
 
+    static DateTime Expiration;
+
     protected HttpClient HttpClient { get; } = httpClientFactory.CreateClient();
 
     protected async Task AuthorizeAsync(CancellationToken cancellationToken = default)
     {
-        if (Authorization == null)
+        if (Authorization == null || DateTime.UtcNow > Expiration)
         {
             var body = new List<KeyValuePair<string, string>>
             {
@@ -35,14 +37,23 @@ public abstract class Factory(IHttpClientFactory httpClientFactory, IConfigurati
             };
 
             using var result = await client.SendAsync(req, cancellationToken);
-
-            var check = await result.Content.ReadAsStreamAsync(cancellationToken);
+            using var check = await result.Content.ReadAsStreamAsync(cancellationToken);
 
             Authorization = JsonSerializer.Deserialize<Result>(check);
 
+            if (Authorization?.Status != "approved")
+                throw new InvalidOperationException("Authorization not approved.");
+
+            var issuedat = DateTimeOffset.FromUnixTimeSeconds(Authorization.IssuedAt).UtcDateTime;
+
+            Expiration = issuedat + TimeSpan.FromSeconds(Authorization.ExpiresIn - 1);
             HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Authorization?.AccessToken);
         }
     }
+
+    protected static string Parameter(string key, string? value) => String.IsNullOrWhiteSpace(value)
+        ? String.Empty
+        : $"&{key}={value}";
 
     static string ExceptionMessage
     {

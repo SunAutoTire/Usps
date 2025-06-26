@@ -2,8 +2,9 @@
 
 A simple .NET client/SDK for the USPS API.
 
-In situations there is a need to deal with mailing addresses, the USPS API can be a useful tool to standardize and validate addresses. This can amount to cost savings when dealing with shipping service companies.
+> This supports USPS API V3 only.
 
+In situations there is a need to deal with mailing addresses, the USPS API can be a useful tool to standardize and validate addresses. This can amount to cost savings when dealing with shipping service companies.
 
 ## Installation
 
@@ -28,6 +29,7 @@ The client expects a `IConfigurationSection` in the form:
 ```
 
 Inject the class of your choice into your application's service collection along with the HTTP client:
+
 ```csharp
 services.AddHttpClient();
 services.AddScoped<Addresses>();
@@ -54,7 +56,3 @@ Please make sure to update tests as appropriate.
 If you like this project and think it has helped in any way, consider getting tires or auto service at a Sun Auto Tire & Service location near you:
 
 <a href="https://sun.auto/home" target="_blank"><img src="https://sun.auto/wp-content/themes/sun-auto/images/logo_sunauto.png" alt="Sun Auto Tire & Service" width="150" height="65"/></a>
-
-## License
-
-MIT
