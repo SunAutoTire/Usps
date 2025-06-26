@@ -4,15 +4,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace SunAuto.Usps.Client;
 
-public class Factory(IHttpClientFactory httpClientFactory, IConfiguration configuration, string sectionName="Usps")
+public abstract class Factory(IHttpClientFactory httpClientFactory, IConfiguration configuration)
 {
     const string TokenUrl = "https://api.usps.com/oauth2/v3/token";
-    readonly string ClientId = configuration?[$"{sectionName}:ClientId"] ?? throw new ArgumentException(ExceptionMessage);
-    readonly string ClientSecret = configuration?[$"{sectionName}:ClientSecret"] ?? throw new ArgumentException(ExceptionMessage);
+    readonly string ClientId = configuration?["Usps:ClientId"] ?? throw new ArgumentException(ExceptionMessage);
+    readonly string ClientSecret = configuration?["Usps:ClientSecret"] ?? throw new ArgumentException(ExceptionMessage);
 
-    protected string BaseUrl { get; } = configuration?[$"{sectionName}:BaseUrl"] ?? throw new ArgumentException(ExceptionMessage);
+    protected string BaseUrl { get; } = configuration?["Usps:BaseUrl"] ?? throw new ArgumentException(ExceptionMessage);
 
-    protected Result? Authorization { get; private set; }
+    static protected Result? Authorization { get; private set; }
 
     protected HttpClient HttpClient { get; } = httpClientFactory.CreateClient();
 
@@ -53,7 +53,7 @@ public class Factory(IHttpClientFactory httpClientFactory, IConfiguration config
             output.AppendLine("Please check your configuration:");
             output.AppendLine();
             output.AppendLine("Configuration should look like (JSON):");
-            output.AppendLine("\"<Section name>\": { // (default 'Usps')");
+            output.AppendLine("\"Usps\": {");
             output.AppendLine("   \"BaseUrl\": \"<USPS Base URL>\",");
             output.AppendLine("   \"ClientSecret\": \"<USPS Issued Client Secret>\",");
             output.AppendLine("   \"ClientId\": \"<USPS Issued Client ID>\"");
