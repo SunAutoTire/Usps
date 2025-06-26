@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace SunAuto.Usps.Client;
 
-public abstract class Factory(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+public abstract class Factory(IHttpClientFactory httpClientFactory, IConfiguration configuration) : IDisposable
 {
     const string TokenUrl = "https://api.usps.com/oauth2/v3/token";
     readonly string ClientId = configuration?["Usps:ClientId"] ?? throw new ArgumentException(ExceptionMessage);
@@ -13,8 +13,6 @@ public abstract class Factory(IHttpClientFactory httpClientFactory, IConfigurati
     protected string BaseUrl { get; } = configuration?["Usps:BaseUrl"] ?? throw new ArgumentException(ExceptionMessage);
 
     static protected Result? Authorization { get; private set; }
-
-    static DateTime Expiration;
 
     protected HttpClient HttpClient { get; } = httpClientFactory.CreateClient();
 
@@ -51,6 +49,32 @@ public abstract class Factory(IHttpClientFactory httpClientFactory, IConfigurati
         }
     }
 
+    async Task RevokeAsync(CancellationToken cancellationToken = default)
+    {
+        if (Authorization != null)
+        {
+            var body = new List<KeyValuePair<string, string>>
+            {
+                new("token", Authorization.AccessToken),
+                new("token_type_hint", "access_token")
+            };
+
+            using var client = httpClientFactory.CreateClient();
+
+            using var req = new HttpRequestMessage(HttpMethod.Post, TokenUrl)
+            {
+                Content = new FormUrlEncodedContent(body)
+            };
+
+            using var result = await client.SendAsync(req, cancellationToken);
+
+            if (result.StatusCode != System.Net.HttpStatusCode.OK)
+                throw new InvalidOperationException("Access token could not be revoked.");
+            else
+                Authorization = null;
+        }
+    }
+
     protected static string Parameter(string key, string? value) => String.IsNullOrWhiteSpace(value)
         ? String.Empty
         : $"&{key}={value}";
@@ -74,4 +98,40 @@ public abstract class Factory(IHttpClientFactory httpClientFactory, IConfigurati
             return output.ToString();
         }
     }
+
+    #region Disposable
+
+    static DateTime Expiration;
+    private bool disposedValue;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                RevokeAsync().GetAwaiter().GetResult();
+            }
+
+            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+            // TODO: set large fields to null
+            disposedValue = true;
+        }
+    }
+
+    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+    // ~Factory()
+    // {
+    //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+    //     Dispose(disposing: false);
+    // }
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }
