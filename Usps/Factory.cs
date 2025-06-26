@@ -7,6 +7,7 @@ namespace SunAuto.Usps.Client;
 public abstract class Factory(IHttpClientFactory httpClientFactory, IConfiguration configuration) : IDisposable
 {
     const string TokenUrl = "https://api.usps.com/oauth2/v3/token";
+    const string RevokeUrl = "https://api.usps.com/oauth2/v3/revoke";
     readonly string ClientId = configuration?["Usps:ClientId"] ?? throw new ArgumentException(ExceptionMessage);
     readonly string ClientSecret = configuration?["Usps:ClientSecret"] ?? throw new ArgumentException(ExceptionMessage);
 
@@ -61,7 +62,7 @@ public abstract class Factory(IHttpClientFactory httpClientFactory, IConfigurati
 
             using var client = httpClientFactory.CreateClient();
 
-            using var req = new HttpRequestMessage(HttpMethod.Post, TokenUrl)
+            using var req = new HttpRequestMessage(HttpMethod.Post, RevokeUrl)
             {
                 Content = new FormUrlEncodedContent(body)
             };
