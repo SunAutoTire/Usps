@@ -41,7 +41,7 @@ If you are using an Azure Function, you can set the configuration in the `local.
 Inject the class of your choice into your application's service collection along with the HTTP client using the included start up extension method:
 
 ```csharp
-services.AddUspsClient(configuration);
+services.AddSatsUspsClient(configuration);
 ```
 
 > Currently, only the standardized address and city & state by zip code is implemented which returns the best standardized address for a given address.

@@ -4,9 +4,19 @@ using System.Text;
 
 namespace SunAuto.Usps.Client;
 
+/// <summary>
+/// Extension methods for configuring the USPS client services.
+/// </summary>
 public static class Startup
 {
-    public static IServiceCollection AddUspsClient(this IServiceCollection services, IConfiguration configuration)
+    /// <summary>
+    /// Adds the USPS client services to the service collection.
+    /// </summary>
+    /// <param name="services">Services collection</param>
+    /// <param name="configuration">Entire configuration object</param>
+    /// <returns>Services collection now containing necessary objects.</returns>
+    /// <exception cref="ArgumentException">Base URL is not configured.</exception>
+    public static IServiceCollection AddSatsUspsClient(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpClient("AuthorizationClient", client =>
         {
@@ -25,6 +35,9 @@ public static class Startup
         return services;
     }
 
+    /// <summary>
+    /// A human-readable message to display when the configuration is not set up correctly.
+    /// </summary>
     internal static string ExceptionMessage
     {
         get
@@ -51,6 +64,4 @@ public static class Startup
             return output.ToString();
         }
     }
-
-
 }
