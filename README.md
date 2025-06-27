@@ -35,7 +35,7 @@ services.AddHttpClient();
 services.AddScoped<Addresses>();
 ```
 
-> Currently, only the `Addresses` class is implemented which returns the best standardized address for a given address.
+> Currently, only the standardized address and city & state by zip code is implemented which returns the best standardized address for a given address.
 
 ## Contributing
 
