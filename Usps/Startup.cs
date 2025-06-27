@@ -40,6 +40,13 @@ public static class Startup
             output.AppendLine("   \"ClientId\": \"<USPS Issued Client ID>\"");
             output.AppendLine("}");
             output.AppendLine();
+            output.AppendLine("or if using an Azure Function:");
+            output.AppendLine();
+            output.AppendLine("{");
+            output.AppendLine("\"Usps:BaseUrl\": \"<USPS Base URL>\",");
+            output.AppendLine("\"Usps:ClientSecret\": \"<USPS Issued Client Secret>\",");
+            output.AppendLine("\"Usps:ClientId\": \"<USPS Issued Client ID>\"");
+            output.AppendLine("}");
 
             return output.ToString();
         }

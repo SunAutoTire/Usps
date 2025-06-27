@@ -18,7 +18,7 @@ public abstract class Factory(IHttpClientFactory httpClientFactory, IConfigurati
 
     protected HttpClient HttpClient { get; } = httpClientFactory.CreateClient();
 
-    protected async Task AuthorizeAsync(CancellationToken cancellationToken = default)
+    async Task AuthorizeAsync(CancellationToken cancellationToken = default)
     {
         if (Authorization == null || DateTime.UtcNow > Expiration)
         {

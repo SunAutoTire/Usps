@@ -30,7 +30,7 @@ public class Addresses(IHttpClientFactory httpClientFactory, IConfiguration conf
 
     public async Task<CityStateResult?> GetCityAndStateAsync(string zipcode, CancellationToken cancellationToken = default)
     {
-        var requesturl = $"{BaseUrl}/city-state?ZIPCode={zipcode}";
+        var requesturl = $"{BaseUrl}/addresses/v3/city-state?ZIPCode={zipcode}";
 
         return await GetDataAsync<CityStateResult>(requesturl.ToString(), cancellationToken);
     }

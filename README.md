@@ -10,9 +10,9 @@ In situations there is a need to deal with mailing addresses, the USPS API can b
 
 Use the dotnet CLI, VSCode Solution explorer, or VS package manager to install:
 
-[TBD](https:///)
+[SunAuto.Usps.Client](https://www.nuget.org/packages/SunAuto.Usps.Client)
 
-> No package has been published yet. Please check back later.
+> The package has limited coverage of the API and is still in preview.
 
 ## Usage
 
@@ -28,6 +28,16 @@ The client expects a `IConfigurationSection` in the form:
 }
 ```
 
+If you are using an Azure Function, you can set the configuration in the `local.settings.json` file or in the Azure portal under Application Settings.
+
+```json
+{
+  "Usps:ClientId": "your-client-id",
+  "Usps:ClientSecret": "your-client-secret",
+  "Usps:BaseUrl": "USPS API Base URL"
+}
+```
+
 Inject the class of your choice into your application's service collection along with the HTTP client:
 
 ```csharp
@@ -36,6 +46,27 @@ services.AddScoped<Addresses>();
 ```
 
 > Currently, only the standardized address and city & state by zip code is implemented which returns the best standardized address for a given address.
+
+Successful requests will return a response object specific to the data which the API returns. For example, the `Addresses` class will return a `StandardizedAddressResponse` object.
+
+Errors will throw a `ArgumentException` with a message indicating the error and more detailed information in an object added to the Data collection property of the exception containing error information deserialized from the error response, e.g.,
+
+```json
+{
+    "apiVersion": "/addresses/v3/",
+    "error": {
+        "code": "400",
+        "message": "OASValidation OpenAPI-Spec-Validation-Addresses-Request with resource oas://addresses_v3.yaml: failed with reason: [ERROR - ECMA 262 regex ^(AA|AE|AL|AK|AP|AS|AZ|AR|CA|CO|CT|DE|DC|FM|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MH|MD|MA|MI|MN|MS|MO|MP|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VI|VA|WA|WV|WI|WY)$ does not match input string tx: []]",
+        "errors": [
+            {
+                "title": "openapi_validation_error",
+                "detail": "The API request or response does not validate against the specification.",
+                "source": "API"
+            }
+        ]
+    }
+}
+```
 
 ## Contributing
 
