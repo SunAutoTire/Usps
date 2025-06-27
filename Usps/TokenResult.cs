@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace SunAuto.Usps.Client;
 
-public class Result
+public class TokenResult
 {
     [JsonPropertyName("access_token")]
     public string AccessToken { get; set; } = null!;
