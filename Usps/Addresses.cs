@@ -19,11 +19,20 @@ public class Addresses(IHttpClientFactory httpClientFactory, IConfiguration conf
         var requesturl = new StringBuilder();
 
         requesturl.Append($"{BaseUrl}/addresses/v3/address?streetAddress={streetAddress}&state={state}&ZIPCode={zipCode}");
-        requesturl.Append(Parameter("firm", firm));
-        requesturl.Append(Parameter("secondaryAddress", secondaryAddress));
-        requesturl.Append(Parameter("city", city));
-        requesturl.Append(Parameter("urbanization", urbanization));
-        requesturl.Append(Parameter("ZIPPlus4", zipPlus4));
+        requesturl.Append("firm".Parameter(firm));
+        requesturl.Append("secondaryAddress".Parameter(secondaryAddress));
+        requesturl.Append("city".Parameter(city));
+        requesturl.Append("urbanization".Parameter(urbanization));
+        requesturl.Append("ZIPPlus4".Parameter(zipPlus4));
+
+        return await GetDataAsync<StandardizedAddress>(requesturl.ToString(), cancellationToken);
+    }
+
+    public async Task<StandardizedAddress?> GetStandardizedAddressAsync(Address address, CancellationToken cancellationToken = default)
+    {
+        var requesturl = new StringBuilder();
+
+        requesturl.Append($"{BaseUrl}/addresses/v3/address?{address.ToString()}");
 
         return await GetDataAsync<StandardizedAddress>(requesturl.ToString(), cancellationToken);
     }
