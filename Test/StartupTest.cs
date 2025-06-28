@@ -9,10 +9,10 @@ public class StartupTest
     {
         var check = Usps.Client.Startup.ExceptionMessage;
 
-        Assert.Equals(GetErrorMessage(), check);
+        Assert.Equal(GetErrorMessage(), check);
     }
 
-    string GetErrorMessage()
+    static string GetErrorMessage()
     {
         var output = new StringBuilder();
 
