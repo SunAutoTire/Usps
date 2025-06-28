@@ -16,18 +16,15 @@ public static class Startup
     /// <param name="configuration">Entire configuration object</param>
     /// <returns>Services collection now containing necessary objects.</returns>
     /// <exception cref="ArgumentException">Base URL is not configured.</exception>
-    public static IServiceCollection AddSatsUspsClient(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddSatsUspsClient(this IServiceCollection services, IConfiguration configuration, string sectionName = "Usps")
     {
         services.AddHttpClient("AuthorizationClient", client =>
         {
-            client.BaseAddress = new Uri(configuration["Usps:BaseUrl"] ?? throw new ArgumentException("BaseUrl is not configured"));
+            client.BaseAddress = new Uri(configuration[$"{sectionName}:BaseUrl"] ?? throw new ArgumentException("BaseUrl is not configured"));
         })
-        .ConfigurePrimaryHttpMessageHandler(() =>
+        .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
         {
-            return new HttpClientHandler()
-            {
-                UseCookies = false
-            };
+            UseCookies = false
         });
 
         services.AddScoped<Addresses>();
@@ -38,7 +35,7 @@ public static class Startup
     /// <summary>
     /// A human-readable message to display when the configuration is not set up correctly.
     /// </summary>
-    internal static string ExceptionMessage
+    public static string ExceptionMessage
     {
         get
         {
