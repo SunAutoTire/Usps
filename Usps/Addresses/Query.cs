@@ -1,13 +1,15 @@
 ﻿using System.Text;
 
-namespace SunAuto.Usps.Client;
+namespace SunAuto.Usps.Client.Addresses;
 
-public class Address
+public class Query
 {
-    public string? StreetAddress { get; set; }
+    public string? Firm { get; set; }
+    public string StreetAddress { get; set; } = null!;
     public string? SecondaryAddress { get; set; }
     public string? City { get; set; }
     public string? State { get; set; }
+    public string Urbanization { get; set; } = null!;
     public string? ZipCode { get; set; }
     public string? ZipPlus4 { get; set; }
 

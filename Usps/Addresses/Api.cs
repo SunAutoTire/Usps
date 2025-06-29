@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Text;
 
-namespace SunAuto.Usps.Client;
+namespace SunAuto.Usps.Client.Addresses;
 
 public class Addresses(IHttpClientFactory httpClientFactory, IConfiguration configuration) :
     Factory(httpClientFactory, configuration)
