@@ -21,13 +21,17 @@ public class Address
         return base.GetHashCode();
     }
 
-    public override string ToString() => base.ToString();
+    public override string? ToString() => base.ToString();
 
+    /// <summary>
+    /// Create query parameter list.
+    /// </summary>
+    /// <returns>String in the form of a URL parameter list.</returns>
     public string ToQuery()
     {
         var requesturl = new StringBuilder();
 
-        requesturl.Append($"addresses/v3/address?streetAddress={StreetAddress}&state={State}&ZIPCode={ZipCode}");
+        requesturl.Append($"streetAddress={StreetAddress}&state={State}&ZIPCode={ZipCode}");
         // requesturl.Append("firm".Parameter( Firm));
         requesturl.Append("secondaryAddress".Parameter(SecondaryAddress));
         requesturl.Append("city".Parameter(City));
