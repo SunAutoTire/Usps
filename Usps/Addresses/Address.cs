@@ -25,22 +25,14 @@ public class Address
         return base.GetHashCode();
     }
 
-    public override string? ToString() => base.ToString();
-
-    /// <summary>
-    /// Create query parameter list.
-    /// </summary>
-    /// <returns>String in the form of a URL parameter list.</returns>
-    public string ToQuery()
+    public override string? ToString()
     {
         var requesturl = new StringBuilder();
 
-        requesturl.Append($"streetAddress={StreetAddress}&state={State}&ZIPCode={ZipCode}");
-        // requesturl.Append("firm".Parameter( Firm));
-        requesturl.Append("secondaryAddress".Parameter(SecondaryAddress));
-        requesturl.Append("city".Parameter(City));
-        // requesturl.Append("urbanization".Parameter( Urbanization));
-        requesturl.Append("ZIPPlus4".Parameter(ZipPlus4));
+        if (!String.IsNullOrWhiteSpace(Urbanization)) requesturl.AppendLine(Urbanization);
+        requesturl.AppendLine(StreetAddress);
+        if (!String.IsNullOrWhiteSpace(SecondaryAddress)) requesturl.AppendLine(SecondaryAddress);
+        requesturl.Append($"{City} {State} {ZipCode}-{ZipPlus4}");
 
         return requesturl.ToString();
     }
