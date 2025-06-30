@@ -79,10 +79,6 @@ public abstract class Factory(IHttpClientFactory httpClientFactory, IConfigurati
         }
     }
 
-    protected static string Parameter(string key, string? value) => String.IsNullOrWhiteSpace(value)
-        ? String.Empty
-        : $"&{key}={value}";
-
     public async Task<T?> GetDataAsync<T>(string requesturl, CancellationToken cancellationToken = default) where T : class
     {
         await AuthorizeAsync(cancellationToken);
