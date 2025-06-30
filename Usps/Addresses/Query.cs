@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Text.Encodings.Web;
 using System.Web;
 
 namespace SunAuto.Usps.Client.Addresses;
@@ -14,6 +13,20 @@ namespace SunAuto.Usps.Client.Addresses;
 /// </remarks>
 public class Query
 {
+    public Query() { }
+
+    public Query(string streetAddress, string state, string? zipCode = null, string? zipPlus4 = null, string? city = null, string? secondaryAddress = null, string? firm = null, string? urbanization = null)
+    {
+        StreetAddress = streetAddress;
+        State = state;
+        ZipCode = zipCode;
+        Urbanization = urbanization;
+        ZipPlus4 = zipPlus4;
+        City = city;
+        SecondaryAddress = secondaryAddress;
+        Firm = firm;
+    }
+
     /// <summary>
     /// Firm/business corresponding to the address.
     /// </summary>

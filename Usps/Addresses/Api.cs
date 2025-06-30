@@ -6,6 +6,8 @@ namespace SunAuto.Usps.Client.Addresses;
 public class Api(IHttpClientFactory httpClientFactory, IConfiguration configuration) :
     Factory(httpClientFactory, configuration)
 {
+    const string BasePath = "addresses/v3";
+
     public async Task<StandardizedAddress?> GetStandardizedAddressAsync(string streetAddress,
         string state,
         string zipCode,
@@ -18,7 +20,7 @@ public class Api(IHttpClientFactory httpClientFactory, IConfiguration configurat
     {
         var requesturl = new StringBuilder();
 
-        requesturl.Append($"{BaseUrl}/addresses/v3/address?streetAddress={streetAddress}&state={state}&ZIPCode={zipCode}");
+        requesturl.Append($"{BaseUrl}/{BasePath}/address?streetAddress={streetAddress}&state={state}&ZIPCode={zipCode}");
         requesturl.Append("firm".Parameter(firm));
         requesturl.Append("secondaryAddress".Parameter(secondaryAddress));
         requesturl.Append("city".Parameter(city));
@@ -30,16 +32,14 @@ public class Api(IHttpClientFactory httpClientFactory, IConfiguration configurat
 
     public async Task<StandardizedAddress?> GetStandardizedAddressAsync(Address address, CancellationToken cancellationToken = default)
     {
-        var requesturl = new StringBuilder();
-
-        requesturl.Append($"{BaseUrl}/addresses/v3/address?{address.ToString()}");
+        var requesturl = $"{BaseUrl}/{BasePath}/address?{address.ToQuery()}";
 
         return await GetDataAsync<StandardizedAddress>(requesturl.ToString(), cancellationToken);
     }
 
     public async Task<CityStateResult?> GetCityAndStateAsync(string zipcode, CancellationToken cancellationToken = default)
     {
-        var requesturl = $"{BaseUrl}/addresses/v3/city-state?ZIPCode={zipcode}";
+        var requesturl = $"{BaseUrl}/{BasePath}/city-state?ZIPCode={zipcode}";
 
         return await GetDataAsync<CityStateResult>(requesturl.ToString(), cancellationToken);
     }
