@@ -1,4 +1,4 @@
-﻿namespace SunAuto.Usps.Client;
+﻿namespace SunAuto.Usps.Client.Addresses;
 
 /// <summary>
 /// Additional information for addresses.
