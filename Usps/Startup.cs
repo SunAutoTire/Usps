@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SunAuto.Usps.Client.AddressesApi;
+using AddressApi = SunAuto.Usps.Client.Addresses.Api;
 using System.Text;
 
 namespace SunAuto.Usps.Client;
@@ -31,7 +31,7 @@ public static class Startup
             };
         });
 
-        services.AddScoped<Addresses>();
+        services.AddScoped<AddressApi>();
 
         return services;
     }

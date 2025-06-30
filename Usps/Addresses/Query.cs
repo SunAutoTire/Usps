@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using System.Text.Encodings.Web;
+using System.Web;
 
 namespace SunAuto.Usps.Client.Addresses;
 
@@ -77,9 +79,8 @@ public class Query
         if (!String.IsNullOrWhiteSpace(Firm)) requesturl.AppendLine(Firm);
         if (!String.IsNullOrWhiteSpace(Urbanization)) requesturl.AppendLine(Urbanization);
         requesturl.AppendLine(StreetAddress);
-        if (!String.IsNullOrWhiteSpace(StreetAddress)) requesturl.AppendLine($"{StreetAddress}&state={State}&ZIPCode={ZipCode}");
-        requesturl.AppendLine($"{City} {State} {ZipCode}-{ZipPlus4}");
-        requesturl.AppendLine($"{StreetAddress}&state={State}&ZIPCode={ZipCode}");
+        if (!String.IsNullOrWhiteSpace(SecondaryAddress)) requesturl.AppendLine(SecondaryAddress);
+        requesturl.Append($"{City} {State} {ZipCode}-{ZipPlus4}");
 
         return requesturl.ToString();
     }
@@ -99,6 +100,6 @@ public class Query
         requesturl.Append("urbanization".Parameter(Urbanization));
         requesturl.Append("ZIPPlus4".Parameter(ZipPlus4));
 
-        return requesturl.ToString();
+        return HttpUtility.UrlEncode(requesturl.ToString());
     }
 }

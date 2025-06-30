@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SunAuto.Usps.Client.Addresses;
 
-public class Addresses(IHttpClientFactory httpClientFactory, IConfiguration configuration) :
+public class Api(IHttpClientFactory httpClientFactory, IConfiguration configuration) :
     Factory(httpClientFactory, configuration)
 {
     public async Task<StandardizedAddress?> GetStandardizedAddressAsync(string streetAddress,
